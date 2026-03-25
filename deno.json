@@ -1,6 +1,7 @@
 {
   "nodeModulesDir": "auto",
   "tasks": {
+    "generate-txs": "deno run --allow-all generate-txs.ts",
     "serve": "deno run --allow-read --allow-net server.ts"
   },
   "imports": {
