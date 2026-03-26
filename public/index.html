@@ -8,6 +8,37 @@
   <style>
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner { animation: spin 1s linear infinite; display: inline-block; }
+
+    /* Tooltip */
+    .tooltip-anchor { position: relative; cursor: default; }
+    .tooltip-anchor .tooltip-box {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: #d1d5db;
+      white-space: normal;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .tooltip-anchor .tooltip-box::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-bottom-color: #374151;
+    }
+    .tooltip-anchor:hover .tooltip-box { display: block; }
   </style>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen font-mono">
@@ -47,7 +78,16 @@
       >
         Reset
       </button>
-      <span id="thread-info" class="text-gray-500 text-xs"></span>
+      <span id="thread-info" class="tooltip-anchor text-gray-500 text-xs">
+        <span class="tooltip-box">
+          Thread count = <code style="color:#a5b4fc">Math.max(1, navigator.hardwareConcurrency)</code><br><br>
+          <code style="color:#a5b4fc">navigator.hardwareConcurrency</code> reports the number of
+          logical CPU cores visible to the browser. The Rayon WASM thread pool
+          spawns exactly that many workers (minimum 1), each running in a
+          <code style="color:#a5b4fc">SharedArrayBuffer</code>-backed thread so the prover
+          can parallelise polynomial operations across all available cores.
+        </span>
+      </span>
     </div>
 
     <!-- Results table -->
@@ -222,8 +262,10 @@
             setStatus("Ready — click Run Benchmark to start", "green");
             document.getElementById("btn-run").disabled = false;
             if (data.threads) {
-              document.getElementById("thread-info").textContent =
-                `${data.threads} thread${data.threads > 1 ? "s" : ""}`;
+              const label = `${data.threads} thread${data.threads > 1 ? "s" : ""}`;
+              const el = document.getElementById("thread-info");
+              const box = el.querySelector(".tooltip-box").outerHTML;
+              el.innerHTML = `${label} <span style="color:#6366f1">ⓘ</span>${box}`;
             }
             break;
 
