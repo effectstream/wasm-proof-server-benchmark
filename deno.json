@@ -1,0 +1,11 @@
+{
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "generate-txs": "deno run --allow-all generate-txs.ts",
+    "serve": "deno run --allow-read --allow-net server.ts"
+  },
+  "imports": {
+    "@midnight-ntwrk/compact-runtime": "npm:@midnight-ntwrk/compact-runtime@0.15.0",
+    "@midnight-ntwrk/wallet-sdk-address-format": "npm:@midnight-ntwrk/wallet-sdk-address-format@3.1.0"
+  }
+}
